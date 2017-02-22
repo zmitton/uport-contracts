@@ -3,25 +3,22 @@ import "../proxies/Proxy.sol";
 
 contract SingletonStandardController {
   uint    public version;
-  uint    public longTimeLock; // use 259200 for 3 days
+  uint    public timeLock; // 259200 == 3 days
 
-  mapping(address => Identity) public identities;//userkey->proxyaddress
-  // mapping(address => Identity) public identities;//proxyaddress->
+  mapping(address => Identity) public identities;//userKey->proxyaddress
   struct Identity{
     bool    hasAccess;
     Proxy   proxy;
     address public recoveryKey;
-    uint64  public settingsUnlockedAt; //0x0 for always locked
+    uint64  public unlockedAt; //0x0 for always locked
   }
 
   event RecoveryEvent(string action, address initiatedBy);
+  modifier onlyRecoveryKey(userKey){ if(identities[userKey].recoveryKey == msg.sender) _; }
 
-  modifier onlyUserKey() { if (msg.sender == userKey) _; }
-  modifier onlyRecoveryKey() { if (msg.sender == recoveryKey) _; }
-
-  function SingletonStandardController(uint _longTimeLock) {
+  function SingletonStandardController(uint _timeLock) {
     version = 1;
-    longTimeLock = _longTimeLock;
+    timeLock = _timeLock;
   }
 
   function registerProxy(address recoveryKey, uint8 v, bytes32 r, bytes32 s) { //only proxy 
@@ -31,13 +28,13 @@ contract SingletonStandardController {
       identities[userKey] = Identity({
         proxy: Proxy(msg.sender), 
         recoveryKey: recoveryKey, 
-        settingsUnlockedAt: 0x0
+        unlockedAt: 0x0
       });
     }
   }
 
   function locked(Identity id) private returns(bool){
-    if(id.userkey != 0x0){ //user exists
+    if(id.userKey != 0x0){ //user exists
       if(id.settingsUnlocked >= now || id.settingsUnlocked == 0x0){ //settings are locked
         return true;
       }
@@ -49,24 +46,26 @@ contract SingletonStandardController {
     identities[msg.sender].proxy.forward(destination, value, data);
   }
 
-  function changeRecovery() { identities[msg.sender].recoveryKey = recoveryKey; }
-
+  function unlock(){
+    identities[msg.sender].unlockedAt = now + timeLock;
+  }
+  function changeRecovery() { 
+    identities[msg.sender].recoveryKey = recoveryKey; 
+    delete identities[oldUserKey].unlockedAt;
+  }
   function changeController(address controller) {
-   if(!locked(identities[msg.sender])){
-      proxy.transfer(controller);
+    if(!locked(identities[msg.sender])){ 
+      proxy.transfer(controller); 
+      delete identities[oldUserKey].unlockedAt;
     }
   }
-  //pass 0x0 to cancel 
-  function changeUserKey(address _proposedUserKey) onlyUserKey{
-    userKey = proposedUserKey;
-    RecoveryEvent("changeUserKey", msg.sender);
+  function changeRecoveryFromRecovery(address userKey, address newRecoveryKey) onlyRecoveryKey(userKey){ 
+    identities[userKey].recoveryKey = newRecoveryKey; 
+    delete identities[oldUserKey].unlockedAt;
   }
-
-  
-  function changeRecoveryFromRecovery(address _recoveryKey) onlyRecoveryKey{ recoveryKey = _recoveryKey; }
-  function changeUserKeyFromRecovery(address _userKey) onlyRecoveryKey{
-    delete proposedUserKey;
-    userKey = _userKey;
+  function changeUserKeyFromRecovery(address oldUserKey, address newUserKey) onlyRecoveryKey(oldUserKey){ 
+    identities[oldUserKey].userKey = newUserKey;
+    delete identities[oldUserKey].unlockedAt;
   }
 }
 
