@@ -8,7 +8,10 @@ const UportContracts = {
   Proxy:                          Contract(require('./build/contracts/Proxy.json')),
   RecoveryQuorum:                 Contract(require('./build/contracts/RecoveryQuorum.json')),
   StandardController:             Contract(require('./build/contracts/StandardController.json')),
-  Registry:                       Contract(require('./build/contracts/UportRegistry.json'))
+  SharedController:               Contract(require('./build/contracts/SharedController.json')),
+  SensuiBank:                     Contract(require('./build/contracts/SensuiBank.json')),
+  RegistryV1:                     Contract(require('./build/contracts/UportRegistryV1.json')),
+  RegistryV3:                     Contract(require('./build/contracts/UportRegistryV3.json'))
 }
 
 module.exports = UportContracts
