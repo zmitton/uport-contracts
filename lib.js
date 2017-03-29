@@ -3,6 +3,7 @@ const Contract = require('truffle-contract')
 const UportContracts = {
   ArrayLib:                       Contract(require('./build/contracts/ArrayLib.json')),
   IdentityFactory:                Contract(require('./build/contracts/IdentityFactory.json')),
+  IdentityFactoryWithRecoveryKey: Contract(require('./build/contracts/IdentityFactoryWithRecoveryKey.json')),
   Migrations:                     Contract(require('./build/contracts/Migrations.json')),
   Owned:                          Contract(require('./build/contracts/Owned.json')),
   Proxy:                          Contract(require('./build/contracts/Proxy.json')),
