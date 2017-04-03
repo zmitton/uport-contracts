@@ -6,6 +6,7 @@
   "directories": {
     "test": "test"
   },
+  "main": "lib.js",
   "scripts": {
     "truffle": "node_modules/.bin/truffle",
     "truffle-compile": "node_modules/.bin/truffle compile",

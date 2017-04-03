@@ -1,15 +1,16 @@
 const Contract = require('truffle-contract')
 
 const UportContracts = {
-  ArrayLib:                       Contract(require('./build/contracts/ArrayLib.json')),
-  IdentityFactory:                Contract(require('./build/contracts/IdentityFactory.json')),
-  IdentityFactoryWithRecoveryKey: Contract(require('./build/contracts/IdentityFactoryWithRecoveryKey.json')),
-  Migrations:                     Contract(require('./build/contracts/Migrations.json')),
-  Owned:                          Contract(require('./build/contracts/Owned.json')),
-  Proxy:                          Contract(require('./build/contracts/Proxy.json')),
-  RecoveryQuorum:                 Contract(require('./build/contracts/RecoveryQuorum.json')),
-  RecoverableController:          Contract(require('./build/contracts/RecoverableController.json')),
-  Registry:                       Contract(require('./build/contracts/UportRegistry.json'))
+  ArrayLib:                       require('./build/contracts/ArrayLib.json'),
+  IdentityFactory:                require('./build/contracts/IdentityFactory.json'),
+  IdentityFactoryWithRecoveryKey: require('./build/contracts/IdentityFactoryWithRecoveryKey.json'),
+  Migrations:                     require('./build/contracts/Migrations.json'),
+  Owned:                          require('./build/contracts/Owned.json'),
+  Proxy:                          require('./build/contracts/Proxy.json'),
+  RecoveryQuorum:                 require('./build/contracts/RecoveryQuorum.json'),
+  RecoverableController:          require('./build/contracts/RecoverableController.json'),
+  RegistryV1:                     require('./build/contracts/UportRegistryV1.json'),
+  RegistryV3:                     require('./build/contracts/UportRegistryV3.json')
 }
 
 module.exports = UportContracts
