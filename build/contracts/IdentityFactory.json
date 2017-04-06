@@ -145,42 +145,6 @@
       },
       "address": "0x1c9d9e1962985c9b8101777cae25c46279fe2a9c",
       "updated_at": 1487622652021
-    },
-    "1491335415262": {
-      "events": {
-        "0xc36800ebd6079fdafc3a7100d0d1172815751804a6d1b7eb365b85f6c9c80e61": {
-          "anonymous": false,
-          "inputs": [
-            {
-              "indexed": true,
-              "name": "userKey",
-              "type": "address"
-            },
-            {
-              "indexed": false,
-              "name": "proxy",
-              "type": "address"
-            },
-            {
-              "indexed": false,
-              "name": "controller",
-              "type": "address"
-            },
-            {
-              "indexed": false,
-              "name": "recoveryQuorum",
-              "type": "address"
-            }
-          ],
-          "name": "IdentityCreated",
-          "type": "event"
-        }
-      },
-      "links": {
-        "ArrayLib": "0x7ae970c37a13d300fa644e94446b21930d84ec52"
-      },
-      "address": "0x58e971804212e261f7fdd36f4491fd6fccbf1a3e",
-      "updated_at": 1491335530550
     }
   },
   "schema_version": "0.0.5",

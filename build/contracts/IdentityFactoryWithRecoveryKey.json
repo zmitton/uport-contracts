@@ -193,40 +193,6 @@
       "links": {},
       "address": "0xdc420f5d89ef5c729c63cf05b0ceda364d5a8b1d",
       "updated_at": 1490211125202
-    },
-    "1491335415262": {
-      "events": {
-        "0xc36800ebd6079fdafc3a7100d0d1172815751804a6d1b7eb365b85f6c9c80e61": {
-          "anonymous": false,
-          "inputs": [
-            {
-              "indexed": true,
-              "name": "userKey",
-              "type": "address"
-            },
-            {
-              "indexed": false,
-              "name": "proxy",
-              "type": "address"
-            },
-            {
-              "indexed": false,
-              "name": "controller",
-              "type": "address"
-            },
-            {
-              "indexed": true,
-              "name": "recoveryKey",
-              "type": "address"
-            }
-          ],
-          "name": "IdentityCreated",
-          "type": "event"
-        }
-      },
-      "links": {},
-      "address": "0x1ede752e796f58471d3cad3d2c957721daad8432",
-      "updated_at": 1491335530547
     }
   },
   "schema_version": "0.0.5",
