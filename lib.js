@@ -1,5 +1,3 @@
-const Contract = require('truffle-contract')
-
 const UportContracts = {
   ArrayLib:                       require('./build/contracts/ArrayLib.json'),
   IdentityFactory:                require('./build/contracts/IdentityFactory.json'),

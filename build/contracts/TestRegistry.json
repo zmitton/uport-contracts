@@ -1,0 +1,55 @@
+{
+  "contract_name": "TestRegistry",
+  "abi": [
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "registry",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [],
+      "name": "testThrow",
+      "outputs": [],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "x",
+          "type": "uint256"
+        }
+      ],
+      "name": "register",
+      "outputs": [],
+      "payable": false,
+      "type": "function"
+    }
+  ],
+  "unlinked_binary": "0x606060405234610000575b60f6806100186000396000f300606060405263ffffffff60e060020a600035041663038defd78114603657806350bff6bf14606b578063f207564e146077575b6000565b34600057605973ffffffffffffffffffffffffffffffffffffffff600435166086565b60408051918252519081900360200190f35b3460005760756032565b005b346000576075600435609e565b005b60006020819052908152604090205481565b6000565b565b73ffffffffffffffffffffffffffffffffffffffff331660009081526020819052604090208190555b505600a165627a7a72305820a7aaeeb58eecda3e0887507cc300e0ff875020ddadb2aea499c434298b39c6da0029",
+  "networks": {
+    "1491335415262": {
+      "events": {},
+      "links": {},
+      "address": "0x865e2ded9253ff21975d79ce626d27a443bc683a",
+      "updated_at": 1491335530541
+    }
+  },
+  "schema_version": "0.0.5",
+  "updated_at": 1491335530541
+}

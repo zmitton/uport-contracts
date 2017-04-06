@@ -33,9 +33,7 @@
         "web3"
     ]
   },
-  "dependencies": {
-    "truffle-contract": "^1.1.10"
-  },
+  "dependencies": {},
   "devDependencies": {
     "browserify": "^13.1.1",
     "eth-signer": "^0.2.2",
