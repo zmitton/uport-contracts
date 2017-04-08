@@ -172,7 +172,7 @@
         }
       },
       "address": "0xab5c8051b9a1df1aab0149f8b0630848b7ecabf6",
-      "updated_at": 1487624027710
+      "updated_at": 9999999999999
     },
     "3": {
       "links": {},
@@ -206,9 +206,9 @@
         }
       },
       "address": "0x41566e3a081f5032bdcad470adb797635ddfe1f0",
-      "updated_at": 1487622652023
+      "updated_at": 9999999999999
     }
   },
   "schema_version": "0.0.5",
-  "updated_at": 1487626238156
+  "updated_at": 9999999999999
 }
