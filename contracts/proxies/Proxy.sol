@@ -27,7 +27,18 @@
 //   }
 // }
 
-// // 'VERSION 3' creatable proxy will go here. not used yet though...
+// 'VERSION 3'  This proxy can create arbitrary contracts
+// This is useful when the contract to be created initializes an 
+// 'owner' variable, to the msg.sender.
+
+// In order to create a contract through the proxy the forward function
+// is called but with a very specific destination address.
+// The destination address could have been defined as anything
+// but the goal was for it not to collide with any other address
+// that might be a real account address, OR anything that might be
+// used elsewhere as a burn address OR anything that might to become 
+// a special address in future versions of the EVM
+
 pragma solidity 0.4.8;
 import "../libraries/Owned.sol";
 contract Proxy is Owned {
@@ -37,16 +48,17 @@ contract Proxy is Owned {
   
   function () payable { Received(msg.sender, msg.value); }
 
-  function forward(address destination, uint value, bytes data) onlyOwner {
+  function forward(address destination, uint value, bytes data) onlyOwner payable{
     if (destination == 0xc5c4bbf9bf69b54f1bb823385d127bd7238ee7f6) {//sha3("createContractFromProxy")
         address creation;
         assembly {
-            creation := create(0,add(data,0x20), mload(data))
+            creation := create(value,add(data,0x20), mload(data))
             jumpi(invalidJumpLabel,iszero(extcodesize(creation)))
         }
         Created(creation);
+    }else{
+        if (!destination.call.value(value)(data)) { throw; }
+        Forwarded(destination, value, data);
     }
-    if (!destination.call.value(value)(data)) { throw; }
-    Forwarded(destination, value, data);
   }
 }

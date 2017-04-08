@@ -4,12 +4,12 @@ const RecoverableController = artifacts.require('RecoverableController')
 const RecoveryQuorum = artifacts.require('RecoveryQuorum')
 
 contract('IdentityFactory', (accounts) => {
-  let identityFactory
+  let deployedIdentityFactory
   let proxy
   let recoveryQuorum
-  let deployedProxy
-  let deployedRecoverableController
-  let deployedRecoveryQuorum
+  let initProxy
+  let initRecoverableController
+  let initRecoveryQuorum
   let recoverableController
   let user1
   let delegate1
@@ -37,49 +37,50 @@ contract('IdentityFactory', (accounts) => {
     delegates = [delegate1, delegate2, delegate3, delegate4]
 
     IdentityFactory.deployed().then((instance) => {
-      identityFactory = instance
+      deployedIdentityFactory = instance
       return Proxy.new({from: accounts[0]})
     }).then((instance) => {
-      deployedProxy = instance
+      initProxy = instance
       return RecoverableController.new({from: accounts[0]})
     }).then((instance) => {
-      deployedRecoverableController = instance
+      initRecoverableController = instance
       return RecoveryQuorum.new({from: accounts[0]})
     }).then((instance) => {
-      deployedRecoveryQuorum = instance
+      initRecoveryQuorum = instance
       done()
     })
   })
 
   it('Correctly creates proxy, controller, and recovery contracts', (done) => {
-    let event = identityFactory.IdentityCreated({creator: nobody})
-    event.watch((error, result) => {
-      if (error) throw Error(error)
-      event.stopWatching()
-      // Check that event has addresses to correct contracts
-      proxyAddress = result.args.proxy
-      recoverableControllerAddress = result.args.controller
-      recoveryQuorumAddress = result.args.recoveryQuorum
+
+    deployedIdentityFactory.CreateProxyWithControllerAndRecovery(user1, delegates, longTimeLock, shortTimeLock, {from: nobody}).then((result)=>{
+
+      console.log("LOGS: ", result.logs)
+      console.log("LOGS[0]: ", result.logs[0])
+      console.log("ETHACCOUNTS0: ", accounts[0])
+      console.log("NOBAODY: ", nobody)
+      proxyAddress = result.logs[0].args.proxy
+      recoverableControllerAddress = result.logs[0].args.controller
+      recoveryQuorumAddress = result.logs[0].args.recoveryQuorum
 
       assert.equal(web3.eth.getCode(proxyAddress),
-                   web3.eth.getCode(deployedProxy.address),
+                   web3.eth.getCode(initProxy.address),
                    'Created proxy should have correct code')
       assert.equal(web3.eth.getCode(recoverableControllerAddress),
-                   web3.eth.getCode(deployedRecoverableController.address),
+                   web3.eth.getCode(initRecoverableController.address),
                    'Created controller should have correct code')
       assert.equal(web3.eth.getCode(recoveryQuorumAddress),
-                   web3.eth.getCode(deployedRecoveryQuorum.address),
+                   web3.eth.getCode(initRecoveryQuorum.address),
                    'Created recoveryQuorum should have correct code')
       proxy = Proxy.at(proxyAddress)
-      recoverableController = RecoverableController.at(result.args.controller)
+      recoverableController = RecoverableController.at(result.logs[0].args.controller)
       recoveryQuorum = RecoveryQuorum.at(recoveryQuorumAddress)
       // Check that the mapping has correct proxy address
-      identityFactory.senderToProxy.call(nobody).then((createdProxyAddress) => {
+      deployedIdentityFactory.senderToProxy.call(nobody).then((createdProxyAddress) => {
         assert(createdProxyAddress, proxy.address, 'Mapping should have the same address as event')
         done()
       }).catch(done)
     })
-    identityFactory.CreateProxyWithControllerAndRecovery(user1, delegates, longTimeLock, shortTimeLock, {from: nobody})
   })
 
   it('Created proxy should have correct state', (done) => {

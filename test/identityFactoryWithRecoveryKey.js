@@ -4,10 +4,10 @@ const RecoverableController = artifacts.require('RecoverableController')
 
 contract('IdentityFactoryWithRecoveryKey', (accounts) => {
   let proxy
-  let deployedProxy
-  let deployedRecoverableController
+  let initProxy
+  let initRecoverableController
   let recoverableController
-  let identityFactoryWithRecoveryKey
+  let deployedIdentityFactoryWithRecoveryKey
   let user1
   let nobody
 
@@ -25,47 +25,70 @@ contract('IdentityFactoryWithRecoveryKey', (accounts) => {
     recoveryKey = accounts[4]
 
     IdentityFactoryWithRecoveryKey.deployed().then((instance) => {
-      identityFactoryWithRecoveryKey = instance
+      deployedIdentityFactoryWithRecoveryKey = instance
       return Proxy.new({from: accounts[0]})
     }).then((instance) => {
-      deployedProxy = instance
+      initProxy = instance
       return RecoverableController.new({from: accounts[0]})
     }).then((instance) => {
-      deployedRecoverableController = instance
+      initRecoverableController = instance
       done()
     })
   })
 
   it('Correctly creates proxy and controller', (done) => {
-    let event = identityFactoryWithRecoveryKey.IdentityCreated({creator: nobody})
-    event.watch((error, result) => {
-      if (error) throw Error(error)
-      event.stopWatching()
-      // Check that event has addresses to correct contracts
-      proxyAddress = result.args.proxy
-      recoverableControllerAddress = result.args.controller
-      let recoveryKeyInContract = result.args.recoveryKey
+    let event = deployedIdentityFactoryWithRecoveryKey.IdentityCreated({creator: nobody})
+    // event.watch((error, result) => {
+    //   if (error) throw Error(error)
+    //   event.stopWatching()
+    //   Check that event has addresses to correct contracts
+    //   proxyAddress = result.args.proxy
+    //   recoverableControllerAddress = result.args.controller
+    //   let recoveryKeyInContract = result.args.recoveryKey
 
+    //   assert.equal(web3.eth.getCode(proxyAddress),
+    //                web3.eth.getCode(initProxy.address),
+    //                'Created proxy should have correct code')
+    //   assert.equal(web3.eth.getCode(recoverableControllerAddress),
+    //                web3.eth.getCode(initRecoverableController.address),
+    //                'Created controller should have correct code')
+    //   assert.equal(recoveryKeyInContract, recoveryKey,
+    //                'Created recoveryQuorum should have correct code')
+    //   proxy = Proxy.at(proxyAddress)
+    //   recoverableController = RecoverableController.at(result.args.controller)
+    //   // Check that the mapping has correct proxy address
+    //   deployedIdentityFactoryWithRecoveryKey.senderToProxy.call(nobody).then((createdProxyAddress) => {
+    //     assert.equal(createdProxyAddress, proxy.address, "Mapping should have the same address as event");
+    //     return deployedIdentityFactoryWithRecoveryKey.recoveryToProxy.call(recoveryKey)
+    //   }).then((createdProxyAddress) => {
+    //     assert.equal(createdProxyAddress, proxy.address, "Mapping should have the same address as event");
+    //     done();
+    //   }).catch(done);
+    // });
+    deployedIdentityFactoryWithRecoveryKey.CreateProxyWithControllerAndRecoveryKey(user1, recoveryKey, longTimeLock, shortTimeLock, {from: nobody}).then((result)=>{
+       proxyAddress = result.logs[0].args.proxy
+      recoverableControllerAddress = result.logs[0].args.controller
+      let recoveryKeyInContract = result.logs[0].args.recoveryKey
+console.log(web3.eth.getCode(proxyAddress))
       assert.equal(web3.eth.getCode(proxyAddress),
-                   web3.eth.getCode(deployedProxy.address),
+                   web3.eth.getCode(initProxy.address),
                    'Created proxy should have correct code')
       assert.equal(web3.eth.getCode(recoverableControllerAddress),
-                   web3.eth.getCode(deployedRecoverableController.address),
+                   web3.eth.getCode(initRecoverableController.address),
                    'Created controller should have correct code')
       assert.equal(recoveryKeyInContract, recoveryKey,
                    'Created recoveryQuorum should have correct code')
       proxy = Proxy.at(proxyAddress)
-      recoverableController = RecoverableController.at(result.args.controller)
+      recoverableController = RecoverableController.at(result.logs[0].args.controller)
       // Check that the mapping has correct proxy address
-      identityFactoryWithRecoveryKey.senderToProxy.call(nobody).then((createdProxyAddress) => {
+      deployedIdentityFactoryWithRecoveryKey.senderToProxy.call(nobody).then((createdProxyAddress) => {
         assert.equal(createdProxyAddress, proxy.address, "Mapping should have the same address as event");
-        return identityFactoryWithRecoveryKey.recoveryToProxy.call(recoveryKey)
+        return deployedIdentityFactoryWithRecoveryKey.recoveryToProxy.call(recoveryKey)
       }).then((createdProxyAddress) => {
         assert.equal(createdProxyAddress, proxy.address, "Mapping should have the same address as event");
         done();
       }).catch(done);
-    });
-    identityFactoryWithRecoveryKey.CreateProxyWithControllerAndRecoveryKey(user1, recoveryKey, longTimeLock, shortTimeLock, {from: nobody})
+    })
   })
 
   it('Created proxy should have correct state', (done) => {
