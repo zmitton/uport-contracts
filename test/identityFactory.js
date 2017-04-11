@@ -55,10 +55,6 @@ contract('IdentityFactory', (accounts) => {
 
     deployedIdentityFactory.CreateProxyWithControllerAndRecovery(user1, delegates, longTimeLock, shortTimeLock, {from: nobody}).then((result)=>{
 
-      console.log("LOGS: ", result.logs)
-      console.log("LOGS[0]: ", result.logs[0])
-      console.log("ETHACCOUNTS0: ", accounts[0])
-      console.log("NOBAODY: ", nobody)
       proxyAddress = result.logs[0].args.proxy
       recoverableControllerAddress = result.logs[0].args.controller
       recoveryQuorumAddress = result.logs[0].args.recoveryQuorum

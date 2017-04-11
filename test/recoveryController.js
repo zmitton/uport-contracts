@@ -1,15 +1,16 @@
 const lightwallet = require('eth-signer')
 const evm_increaseTime = require('./evm_increaseTime.js')
 const Proxy = artifacts.require('Proxy')
-const TestRegistry = artifacts.require('TestRegistry')
+// const TestRegistry = artifacts.require('TestRegistry')
+const RegistryV3 = artifacts.require('RegistryV3')
 const RecoverableController = artifacts.require('RecoverableController')
 
-const LOG_NUMBER_1 = 1234
-const LOG_NUMBER_2 = 2345
+const LOG_NUMBER_1 = 0x1234000000000000000000000000000000000000000000000000000000000000
+const LOG_NUMBER_2 = 0x2345000000000000000000000000000000000000000000000000000000000000
 
 contract('RecoverableController', (accounts) => {
   let recoverableController
-  let testReg
+  let registryV3
   let proxy
   let user1
   let user2
@@ -33,9 +34,9 @@ contract('RecoverableController', (accounts) => {
     // Truffle deploys contracts with accounts[0]
     Proxy.new({from: accounts[0]}).then((instance) => {
       proxy = instance
-      return TestRegistry.deployed()
+      return RegistryV3.new({from: accounts[0]})
     }).then((instance) => {
-      testReg = instance
+      registryV3 = instance
       done()
     })
   })
@@ -65,22 +66,23 @@ contract('RecoverableController', (accounts) => {
     // Transfer ownership of proxy to the controller contract.
     proxy.transfer(recoverableController.address, {from: user1}).then(() => {
       // Encode the transaction to send to the Owner contract
-      let data = '0x' + lightwallet.txutils._encodeFunctionTxData('register', ['uint256'], [LOG_NUMBER_1])
-      return recoverableController.forward(testReg.address, 0, data, {from: user1})
+      let data = '0x' + lightwallet.txutils._encodeFunctionTxData('set', ['bytes32', 'address', 'bytes32'], ['', proxy.address, LOG_NUMBER_1])
+
+      return recoverableController.forward(registryV3.address, 0, data, {from: user1})
     }).then(() => {
       // Verify that the proxy address is logged as the sender
-      return testReg.registry.call(proxy.address)
+      return registryV3.get.call('', proxy.address, proxy.address)
     }).then((regData) => {
-      assert.equal(regData.toNumber(), LOG_NUMBER_1, 'User1 should be able to send transaction')
+      assert.equal(regData, LOG_NUMBER_1, 'User1 should be able to send transaction')
 
       // Encode the transaction to send to the Owner contract
-      let data = '0x' + lightwallet.txutils._encodeFunctionTxData('register', ['uint256'], [LOG_NUMBER_2])
-      return recoverableController.forward(testReg.address, 0, data, {from: user2})
+      let data = '0x' + lightwallet.txutils._encodeFunctionTxData('set', ['bytes32', 'address', 'bytes32'], ['', proxy.address, LOG_NUMBER_2])
+      return recoverableController.forward(registryV3.address, 0, data, {from: user2})
     }).then(() => {
       // Verify that the proxy address is logged as the sender
-      return testReg.registry.call(proxy.address)
+      return registryV3.get.call('', proxy.address, proxy.address)
     }).then((regData) => {
-      assert.notEqual(regData.toNumber(), LOG_NUMBER_2, 'User2 should not be able to send transaction')
+      assert.notEqual(regData, LOG_NUMBER_2, 'User2 should not be able to send transaction')
       done()
     }).catch(done)
   })

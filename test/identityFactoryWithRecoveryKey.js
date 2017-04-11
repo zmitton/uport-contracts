@@ -69,7 +69,6 @@ contract('IdentityFactoryWithRecoveryKey', (accounts) => {
        proxyAddress = result.logs[0].args.proxy
       recoverableControllerAddress = result.logs[0].args.controller
       let recoveryKeyInContract = result.logs[0].args.recoveryKey
-console.log(web3.eth.getCode(proxyAddress))
       assert.equal(web3.eth.getCode(proxyAddress),
                    web3.eth.getCode(initProxy.address),
                    'Created proxy should have correct code')
