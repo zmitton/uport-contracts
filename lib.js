@@ -7,8 +7,8 @@ const UportContracts = {
   Proxy:                          require('./build/contracts/Proxy.json'),
   RecoveryQuorum:                 require('./build/contracts/RecoveryQuorum.json'),
   RecoverableController:          require('./build/contracts/RecoverableController.json'),
-  RegistryV1:                     require('./build/contracts/UportRegistryV1.json'),
-  RegistryV3:                     require('./build/contracts/UportRegistryV3.json')
+  RegistryV1:                     require('./build/contracts/RegistryV1.json'),
+  RegistryV3:                     require('./build/contracts/RegistryV3.json')
 }
 
 module.exports = UportContracts

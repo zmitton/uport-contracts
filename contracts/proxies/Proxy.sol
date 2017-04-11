@@ -49,7 +49,7 @@ contract Proxy is Owned {
   function () payable { Received(msg.sender, msg.value); }
 
   function forward(address destination, uint value, bytes data) onlyOwner payable{
-    if (destination == 0xc5c4bbf9bf69b54f1bb823385d127bd7238ee7f6) {//sha3("createContractFromProxy")
+    if (destination == 0xC5c4BBF9bf69b54F1bB823385d127Bd7238eE7F6) {//sha3("createContractFromProxy")
         address creation;
         assembly {
             creation := create(value,add(data,0x20), mload(data))
