@@ -69,14 +69,10 @@ contract('IdentityFactory', (accounts) => {
                    web3.eth.getCode(initRecoveryQuorum.address),
                    'Created recoveryQuorum should have correct code')
       proxy = Proxy.at(proxyAddress)
-      recoverableController = RecoverableController.at(result.logs[0].args.controller)
+      recoverableController = RecoverableController.at(recoverableControllerAddress)
       recoveryQuorum = RecoveryQuorum.at(recoveryQuorumAddress)
-      // Check that the mapping has correct proxy address
-      deployedIdentityFactory.senderToProxy.call(nobody).then((createdProxyAddress) => {
-        assert(createdProxyAddress, proxy.address, 'Mapping should have the same address as event')
-        done()
-      }).catch(done)
-    })
+      done()
+    }).catch(done)
   })
 
   it('Created proxy should have correct state', (done) => {
