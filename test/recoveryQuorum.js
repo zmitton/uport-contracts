@@ -188,71 +188,72 @@ contract('RecoveryQuorum', (accounts) => {
   })
 
   it('Only controller user can add delegates to quorum', (done) => {
-    web3.eth.sendTransaction({from: accounts[0], to: user2, value: web3.toWei('10', 'ether')})
-    Proxy.new({from: accounts[0]})
-    .then((newPX) => {
-      proxy = newPX
-      return RecoverableController.new(proxy.address, user2, longTimeLock, shortTimeLock, {from: recovery1})
-    }).then((newRC) => {
-      recoverableController = newRC
-      return proxy.transfer(recoverableController.address, {from: accounts[0]})
-    }).then(() => {
-      return RecoveryQuorum.new(recoverableController.address, delegateList)
-    }).then((newRQ) => {
-      recoveryQuorum = newRQ
-      return recoverableController.changeRecoveryFromRecovery(recoveryQuorum.address, {from: recovery1})
-    }).then(() => {
-      return recoveryQuorum.replaceDelegates([], [accounts[7]], {from: user1})
-    }).then(() => {
-      return recoveryQuorum.delegateAddresses.call(0)
-    }).then((addys) => {
-      return recoveryQuorum.getAddresses.call()
-    }).then((addys) => {
-      return recoveryQuorum.delegates.call(accounts[7])
-    }).then((delegate) => {
-      assert.equal(delegate[delegateDeletedAfter].toNumber(), 0, 'Random user should not be able to add additional delegates to quorum.')
-      return recoveryQuorum.getAddresses()
-    }).then((addys) => {
-      return recoveryQuorum.replaceDelegates([], [accounts[7]], {from: user2})
-    }).then(() => {
-      return recoveryQuorum.delegates.call(accounts[7])
-    }).then((delegate) => {
-      assert.isAbove(delegate[delegateDeletedAfter].toNumber(), 0, 'Controller userKey should be able to add additional delegates to quorum.')
-      assert.approximately(delegate[delegatePendingUntil].toNumber(), creationTime + longTimeLock, 5)
-      return recoveryQuorum.signUserChange(0x123, {from: delegateList[1]})
-    }).then(() => {
-      return recoveryQuorum.delegates.call(delegateList[1])
-    }).then((delegate) => {
-      assert.isAbove(delegate[delegateDeletedAfter].toNumber(), 0, 'This delegate exists from contract creation')
-      assert.equal(delegate[delegateProposedUserKey], 0x0123)
-      assert.equal(delegate[delegatePendingUntil].toNumber(), 0)
-      assert.isAtLeast(delegate[delegateDeletedAfter].toNumber(), 31536000000000, 'inits to 1million years')
-      return recoveryQuorum.replaceDelegates([], [delegateList[1]], {from: user2})
-    }).then(() => {
-      return recoveryQuorum.delegates.call(delegateList[1])
-    }).then((delegate) => {
-      assert.isAbove(delegate[delegateDeletedAfter].toNumber(), 0, 'Trying to add existing delegate should affect nothing')
-      assert.equal(delegate[delegateProposedUserKey], 0x0123, 'Trying to add existing delegate should affect nothing')
-      assert.equal(delegate[delegatePendingUntil].toNumber(), 0, 'Trying to add existing delegate should affect nothing')
-      assert.isAtLeast(delegate[delegateDeletedAfter].toNumber(), 31536000000000, 'Trying to add existing delegate should affect nothing')
-      return recoveryQuorum.replaceDelegates([accounts[3], accounts[4]], [], {from: user2})
-    }).then(() => {
-      return evm_increaseTime(longTimeLock + 1)
-    }).then(() => {
-      return recoveryQuorum.replaceDelegates([], [accounts[4]], {from: user2})
-    }).then(() => {
-      return recoveryQuorum.getAddresses.call()
-    }).then((delegateAddresses) => {
-      assert.deepEqual(delegateAddresses, [accounts[7], accounts[6], accounts[5], accounts[4]])
-      return recoveryQuorum.replaceDelegates([], [accounts[3]], {from: user2})
-    }).then(() => {
-      return evm_increaseTime(longTimeLock + 1)
-    }).then(() => {
-      return recoveryQuorum.getAddresses.call()
-    }).then((delegateAddresses) => {
-      assert.deepEqual(delegateAddresses, [accounts[7], accounts[6], accounts[5], accounts[4], accounts[3]])
-      done()
-    }).catch(done)
+    web3.eth.sendTransaction({from: accounts[0], to: user2, value: web3.toWei('10', 'ether')}, ()=>{
+      Proxy.new({from: accounts[0]})
+      .then((newPX) => {
+        proxy = newPX
+        return RecoverableController.new(proxy.address, user2, longTimeLock, shortTimeLock, {from: recovery1})
+      }).then((newRC) => {
+        recoverableController = newRC
+        return proxy.transfer(recoverableController.address, {from: accounts[0]})
+      }).then(() => {
+        return RecoveryQuorum.new(recoverableController.address, delegateList)
+      }).then((newRQ) => {
+        recoveryQuorum = newRQ
+        return recoverableController.changeRecoveryFromRecovery(recoveryQuorum.address, {from: recovery1})
+      }).then(() => {
+        return recoveryQuorum.replaceDelegates([], [accounts[7]], {from: user1})
+      }).then(() => {
+        return recoveryQuorum.delegateAddresses.call(0)
+      }).then((addys) => {
+        return recoveryQuorum.getAddresses.call()
+      }).then((addys) => {
+        return recoveryQuorum.delegates.call(accounts[7])
+      }).then((delegate) => {
+        assert.equal(delegate[delegateDeletedAfter].toNumber(), 0, 'Random user should not be able to add additional delegates to quorum.')
+        return recoveryQuorum.getAddresses()
+      }).then((addys) => {
+        return recoveryQuorum.replaceDelegates([], [accounts[7]], {from: user2})
+      }).then(() => {
+        return recoveryQuorum.delegates.call(accounts[7])
+      }).then((delegate) => {
+        assert.isAbove(delegate[delegateDeletedAfter].toNumber(), 0, 'Controller userKey should be able to add additional delegates to quorum.')
+        assert.approximately(delegate[delegatePendingUntil].toNumber(), creationTime + longTimeLock, 5)
+        return recoveryQuorum.signUserChange(0x123, {from: delegateList[1]})
+      }).then(() => {
+        return recoveryQuorum.delegates.call(delegateList[1])
+      }).then((delegate) => {
+        assert.isAbove(delegate[delegateDeletedAfter].toNumber(), 0, 'This delegate exists from contract creation')
+        assert.equal(delegate[delegateProposedUserKey], 0x0123)
+        assert.equal(delegate[delegatePendingUntil].toNumber(), 0)
+        assert.isAtLeast(delegate[delegateDeletedAfter].toNumber(), 31536000000000, 'inits to 1million years')
+        return recoveryQuorum.replaceDelegates([], [delegateList[1]], {from: user2})
+      }).then(() => {
+        return recoveryQuorum.delegates.call(delegateList[1])
+      }).then((delegate) => {
+        assert.isAbove(delegate[delegateDeletedAfter].toNumber(), 0, 'Trying to add existing delegate should affect nothing')
+        assert.equal(delegate[delegateProposedUserKey], 0x0123, 'Trying to add existing delegate should affect nothing')
+        assert.equal(delegate[delegatePendingUntil].toNumber(), 0, 'Trying to add existing delegate should affect nothing')
+        assert.isAtLeast(delegate[delegateDeletedAfter].toNumber(), 31536000000000, 'Trying to add existing delegate should affect nothing')
+        return recoveryQuorum.replaceDelegates([accounts[3], accounts[4]], [], {from: user2})
+      }).then(() => {
+        return evm_increaseTime(longTimeLock + 1)
+      }).then(() => {
+        return recoveryQuorum.replaceDelegates([], [accounts[4]], {from: user2})
+      }).then(() => {
+        return recoveryQuorum.getAddresses.call()
+      }).then((delegateAddresses) => {
+        assert.deepEqual(delegateAddresses, [accounts[7], accounts[6], accounts[5], accounts[4]])
+        return recoveryQuorum.replaceDelegates([], [accounts[3]], {from: user2})
+      }).then(() => {
+        return evm_increaseTime(longTimeLock + 1)
+      }).then(() => {
+        return recoveryQuorum.getAddresses.call()
+      }).then((delegateAddresses) => {
+        assert.deepEqual(delegateAddresses, [accounts[7], accounts[6], accounts[5], accounts[4], accounts[3]])
+        done()
+      }).catch(done)
+    })
   })
 
   it('Newly added delegate\'s signature should not count towards quorum yet', (done) => {

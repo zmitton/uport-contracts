@@ -37,36 +37,8 @@ contract('IdentityFactoryWithRecoveryKey', (accounts) => {
   })
 
   it('Correctly creates proxy and controller', (done) => {
-    let event = deployedIdentityFactoryWithRecoveryKey.IdentityCreated({creator: nobody})
-    // event.watch((error, result) => {
-    //   if (error) throw Error(error)
-    //   event.stopWatching()
-    //   Check that event has addresses to correct contracts
-    //   proxyAddress = result.args.proxy
-    //   recoverableControllerAddress = result.args.controller
-    //   let recoveryKeyInContract = result.args.recoveryKey
-
-    //   assert.equal(web3.eth.getCode(proxyAddress),
-    //                web3.eth.getCode(initProxy.address),
-    //                'Created proxy should have correct code')
-    //   assert.equal(web3.eth.getCode(recoverableControllerAddress),
-    //                web3.eth.getCode(initRecoverableController.address),
-    //                'Created controller should have correct code')
-    //   assert.equal(recoveryKeyInContract, recoveryKey,
-    //                'Created recoveryQuorum should have correct code')
-    //   proxy = Proxy.at(proxyAddress)
-    //   recoverableController = RecoverableController.at(result.args.controller)
-    //   // Check that the mapping has correct proxy address
-    //   deployedIdentityFactoryWithRecoveryKey.senderToProxy.call(nobody).then((createdProxyAddress) => {
-    //     assert.equal(createdProxyAddress, proxy.address, "Mapping should have the same address as event");
-    //     return deployedIdentityFactoryWithRecoveryKey.recoveryToProxy.call(recoveryKey)
-    //   }).then((createdProxyAddress) => {
-    //     assert.equal(createdProxyAddress, proxy.address, "Mapping should have the same address as event");
-    //     done();
-    //   }).catch(done);
-    // });
     deployedIdentityFactoryWithRecoveryKey.CreateProxyWithControllerAndRecoveryKey(user1, recoveryKey, longTimeLock, shortTimeLock, {from: nobody}).then((result)=>{
-       proxyAddress = result.logs[0].args.proxy
+      proxyAddress = result.logs[0].args.proxy
       recoverableControllerAddress = result.logs[0].args.controller
       let recoveryKeyInContract = result.logs[0].args.recoveryKey
       assert.equal(web3.eth.getCode(proxyAddress),

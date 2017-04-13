@@ -1,6 +1,5 @@
 const lightwallet = require('eth-signer')
 const Proxy = artifacts.require('Proxy')
-// const TestRegistry = artifacts.require('TestRegistry')
 const RegistryV3 = artifacts.require('RegistryV3')
 
 const LOG_NUMBER_1 = 0x1234000000000000000000000000000000000000000000000000000000000000

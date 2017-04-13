@@ -10,13 +10,15 @@ const IdentityFactory = artifacts.require('IdentityFactory')
 const Proxy = artifacts.require('Proxy')
 const RecoverableController = artifacts.require('RecoverableController')
 const RecoveryQuorum = artifacts.require('RecoveryQuorum')
-const TestRegistry = artifacts.require('TestRegistry')
+const RegistryV3 = artifacts.require('RegistryV3')
 
 const SEED1 = 'tackle crystal drum type spin nest wine occur humor grocery worry pottery'
 const SEED2 = 'tree clock fly receive mirror scissors away avoid seminar attract wife holiday'
-const LOG_NUMBER_1 = 1234
-const LOG_NUMBER_2 = 2345
-const PROXY_GAS_OVERHEAD = 7723
+
+const LOG_NUMBER_1 = 0x1234000000000000000000000000000000000000000000000000000000000000
+const LOG_NUMBER_2 = 0x2345000000000000000000000000000000000000000000000000000000000000
+
+const PROXY_GAS_OVERHEAD = 8925
 
 let gasUsedWithProxy
 let gasUsedWithoutProxy
@@ -64,12 +66,12 @@ contract('Uport proxy integration tests', (accounts) => {
     web3.setProvider(web3Prov)
     // Truffle deploys contracts with accounts[0]
     IdentityFactory.setProvider(web3Prov)
-    TestRegistry.setProvider(web3Prov)
+    RegistryV3.setProvider(web3Prov)
     IdentityFactory.deployed().then((instance) => {
       identityFactory = instance
     })
 
-    TestRegistry.new({from: accounts[0]}).then(tr => {
+    RegistryV3.new({from: accounts[0]}).then(tr => {
       testReg = tr
     })
   })
@@ -95,15 +97,15 @@ contract('Uport proxy integration tests', (accounts) => {
       host: rpchost,
       transaction_signer: proxySigner
     })
-    TestRegistry.setProvider(web3ProxyProvider)
+    RegistryV3.setProvider(web3ProxyProvider)
 
     // Register a number from proxy.address
-    testReg.register(LOG_NUMBER_1, {from: proxy.address}).then(txData => {
+    testReg.set('', proxy.address, LOG_NUMBER_1, {from: proxy.address}).then(txData => {
       // Verify that the proxy address is logged
       gasUsedWithProxy = txData.receipt.cumulativeGasUsed
-      return testReg.registry.call(proxy.address)
+      return testReg.get.call('', proxy.address, proxy.address)
     }).then((regData) => {
-      assert.equal(regData.toNumber(), LOG_NUMBER_1)
+      assert.equal(regData, LOG_NUMBER_1)
       done()
     }).catch(done)
   })
@@ -156,16 +158,16 @@ contract('Uport proxy integration tests', (accounts) => {
         host: rpchost,
         transaction_signer: proxySigner
       })
-      TestRegistry.setProvider(web3ProxyProvider)
+      RegistryV3.setProvider(web3ProxyProvider)
       // Register a number from proxy.address
       return recoverableController.userKey.call()
     }).then((newUserKey) => {
       assert.equal(newUserKey, user2, 'User key of recoverableController should have been updated.')
-      return testReg.register(LOG_NUMBER_2, {from: proxy.address})
+      return testReg.set('', proxy.address, LOG_NUMBER_2, {from: proxy.address})
     }).then(() => {
-      return testReg.registry.call(proxy.address)
+      return testReg.get.call('', proxy.address, proxy.address)
     }).then((regData) => {
-      assert.equal(regData.toNumber(), LOG_NUMBER_2)
+      assert.equal(regData, LOG_NUMBER_2)
       done()
     }).catch(done)
   })
@@ -174,11 +176,11 @@ contract('Uport proxy integration tests', (accounts) => {
     // Set up the Proxy provider
     let testReg2
     let web3Prov = new web3.providers.HttpProvider(rpchost)
-    TestRegistry.setProvider(web3Prov)
+    RegistryV3.setProvider(web3Prov)
     // Register a number from proxy.address
-    TestRegistry.new({from: accounts[0]}).then(tr => {
+    RegistryV3.new({from: accounts[0]}).then(tr => {
       testReg2 = tr
-      return testReg2.register(LOG_NUMBER_1, {from: accounts[0]})
+      return testReg2.set('', accounts[0], LOG_NUMBER_1, {from: accounts[0]})
     }).then(txData => {
       gasUsedWithoutProxy = txData.receipt.cumulativeGasUsed
       assert.approximately(gasUsedWithProxy - gasUsedWithoutProxy, PROXY_GAS_OVERHEAD, 1000, 'PROXY_GAS_OVERHEAD has unexpected value. Please update this in the test file if value has changed.')

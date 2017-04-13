@@ -1,7 +1,6 @@
 const lightwallet = require('eth-signer')
 const evm_increaseTime = require('./evm_increaseTime.js')
 const Proxy = artifacts.require('Proxy')
-// const TestRegistry = artifacts.require('TestRegistry')
 const RegistryV3 = artifacts.require('RegistryV3')
 const RecoverableController = artifacts.require('RecoverableController')
 
