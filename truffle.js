@@ -14,23 +14,18 @@ module.exports = {
       network_id: '*'
     },
     ropsten: {
-      host: 'localhost',
-      port: 8545,
       network_id: 3,
       provider: new HDWalletProvider(mnemonic.ropsten, "https://ropsten.infura.io/")
     },
     kovan: {
-      host: 'localhost',
-      port: 8545,
       network_id: 42,
-      gasLimit: 4712000,
       provider: new HDWalletProvider(mnemonic.kovan, "https://kovan.infura.io/")
     },
     ethereum: {
-      host: 'localhost',
-      port: 8545,
       network_id: 1,
-      gas: 3141592
+      provider: new HDWalletProvider(mnemonic.ethereum, "https://mainnet.infura.io/"),
+      gas: 4000000,
+      gasPrice: 25000000000
     }
   }
 }

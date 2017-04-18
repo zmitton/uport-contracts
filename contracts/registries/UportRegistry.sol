@@ -30,6 +30,7 @@
 // VERSION 3
 // mainnet: 0xab5c8051b9a1df1aab0149f8b0630848b7ecabf6
 // ropsten: 0x41566e3a081f5032bdcad470adb797635ddfe1f0
+// kovan:   0x5f8e9351dc2d238fb878b6ae43aa740d62fc9758
 pragma solidity 0.4.8;
 
 contract UportRegistry{
