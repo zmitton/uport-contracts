@@ -6,25 +6,38 @@
   "directories": {
     "test": "test"
   },
+  "main": "lib.js",
   "scripts": {
     "truffle": "node_modules/.bin/truffle",
+    "test": "./test/trufflewrapper",
     "truffle-compile": "node_modules/.bin/truffle compile",
-    "truffle-migrate-ropsten": "node_modules/.bin/truffle migrate --network ropsten",
-    "truffle-migrate-ethereum": "node_modules/.bin/truffle migrate --network ethereum",
-    "truffle-migrate-testrpc": "node_modules/.bin/truffle migrate --network testrpc",
-    "dist": "node_modules/.bin/browserify lib.js -o dist.js",
-    "test": "node_modules/.bin/testrpc --accounts 25 > /dev/null & TPID=$! && sleep 4 && node_modules/.bin/truffle test && kill $TPID"
+    "build": "node_modules/.bin/browserify lib.js -o dist.js",
+    "lint": "node_modules/.bin/standard"
   },
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "truffle-contract": "^1.1.10"
+  "standard": {
+    "ignore": [
+      "dist.js",
+      "lib.js"
+    ],
+    "globals": [
+      "artifacts",
+      "assert",
+      "before",
+      "contract",
+      "it",
+      "web3"
+    ]
   },
+  "dependencies": {},
   "devDependencies": {
     "browserify": "^13.1.1",
-    "eth-signer": "^0.2.1",
+    "eth-signer": "^0.2.2",
     "ethereumjs-testrpc": "^3.0.3",
     "hooked-web3-provider": "^1.0.0",
-    "truffle": "^3.1.9"
+    "standard": "^9.0.2",
+    "truffle": "^3.1.9",
+    "truffle-hdwallet-provider": "0.0.3"
   }
 }

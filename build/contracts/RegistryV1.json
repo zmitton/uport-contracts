@@ -1,5 +1,5 @@
 {  
-  "contract_name":"UportRegistry",
+  "contract_name":"UportRegistryV1",
   "abi":[  
     {  
       "constant":true,
@@ -134,7 +134,7 @@
         }
       },
       "address":"0x022f41a91cb30d6a20ffcfde3f84be6c1fa70d60",
-      "updated_at":1487624027710
+      "updated_at":9999999999999
     },
     "3":{  
       "links":{},
@@ -158,9 +158,33 @@
         }
       },
       "address":"0xb9C1598e24650437a3055F7f66AC1820c419a679",
-      "updated_at":1487622652023
+      "updated_at":9999999999999
+    },
+    "42":{  
+      "links":{},
+      "events":{  
+        "70c8251d1f51f94ab26213a0dd53ead1bf32aeeb2e95bb6497d8d8bbde61b98d":{  
+          "anonymous":false,
+          "inputs":[  
+            {  
+              "indexed":true,
+              "name":"_sender",
+              "type":"address"
+            },
+            {  
+              "indexed":false,
+              "name":"_timestamp",
+              "type":"uint256"
+            }
+          ],
+          "name":"AttributesSet",
+          "type":"event"
+        }
+      },
+      "address":"0xea8ac9cf5c3d02cfc30f65c04ed921d713062745",
+      "updated_at":9999999999999
     }
   },
   "schema_version":"0.0.5",
-  "updated_at":1487626238156
+  "updated_at":9999999999999
 }
