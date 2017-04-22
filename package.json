@@ -1,7 +1,6 @@
 {
   "name": "uport-contracts",
   "version": "0.0.1",
-  "private": true,
   "description": "",
   "directories": {
     "test": "test"
@@ -9,9 +8,8 @@
   "main": "index.js",
   "scripts": {
     "truffle": "node_modules/.bin/truffle",
-    "test": "./test/trufflewrapper",
     "truffle-compile": "node_modules/.bin/truffle compile",
-    "build": "node_modules/.bin/browserify lib.js -o dist.js",
+    "test": "./test/trufflewrapper",
     "lint": "node_modules/.bin/standard"
   },
   "author": "",
@@ -19,7 +17,7 @@
   "standard": {
     "ignore": [
       "dist.js",
-      "lib.js"
+      "index.js"
     ],
     "globals": [
       "artifacts",
