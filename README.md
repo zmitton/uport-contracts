@@ -2,9 +2,9 @@
 
 Solidity code, tests, and deployment information on the contracts used for uPort. 
 
-Spoiler Alert the easiest way to use them is with [uport-contracts-js](https://github.com/zmitton/uport-contracts-js), which is a package that is made to work with Web3. *This* package will *only* give you access to a `json` object containing:
-  - ABI Definition (sometimes called the 'json interface')
-  - networks (including all deployment address!!!)
+Spoiler Alert: The easiest way to use them is with [uport-contracts-js](https://github.com/zmitton/uport-contracts-js), which is a package that is made to work with Web3. *This* package will *only* give you access to a `json` object, -> containing keys for each contract -> containing keys for:
+  - ABI Definitions (sometimes called the 'json interface')
+  - networks (including all deployment addresses!!!)
   - contract_name
   - unlinked_binary
 [Browse the data](https://github.com/zmitton/uport-contracts/tree/develop/build/contracts)
